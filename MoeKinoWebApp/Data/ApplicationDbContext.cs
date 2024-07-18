@@ -19,6 +19,7 @@ public class ApplicationDbContext: DbContext{
     {
         entity.ToTable("Genres");
         entity.HasKey(e => e.Id);
+        entity.Property(e => e.Id).ValueGeneratedOnAdd();
         entity.Property(e => e.NameEn).IsRequired().HasMaxLength(50);
         entity.Property(e => e.NameRu).IsRequired().HasMaxLength(50);
     });
