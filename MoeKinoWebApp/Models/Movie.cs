@@ -18,5 +18,6 @@ public class Movie
     public string TrailerLinkEn {get; set;}
 
     public string TrailerLinkRu {get; set;}
+    public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
 
 }
