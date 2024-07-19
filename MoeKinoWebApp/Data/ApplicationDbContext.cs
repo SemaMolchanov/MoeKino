@@ -9,14 +9,14 @@ public class ApplicationDbContext: DbContext{
 
     }
 
-    public DbSet<Genres> Genres { get; set; }
-    public DbSet<Genres> Movies { get; set; }
+    public DbSet<Genre> Genres { get; set; }
+    public DbSet<Movie> Movies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     base.OnModelCreating(modelBuilder);
 
-    modelBuilder.Entity<Genres>(entity =>
+    modelBuilder.Entity<Genre>(entity =>
     {
         entity.ToTable("Genres");
         entity.HasKey(e => e.Id);
@@ -25,7 +25,7 @@ public class ApplicationDbContext: DbContext{
         entity.Property(e => e.NameRu).IsRequired().HasMaxLength(50);
     });
 
-    modelBuilder.Entity<Movies>(entity =>
+    modelBuilder.Entity<Movie>(entity =>
     {
         entity.ToTable("Movies");
         entity.HasKey(e => e.Id);
@@ -37,7 +37,7 @@ public class ApplicationDbContext: DbContext{
         entity.Property(e => e.TrailerLinkEn).IsRequired(false).HasMaxLength(2000); 
         entity.Property(e => e.TrailerLinkRu).IsRequired(false).HasMaxLength(2000); 
     });
-
+    
 }
 
 }

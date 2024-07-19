@@ -11,7 +11,7 @@ using MoeKinoWebApp.Data;
 namespace MoeKinoWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240718083715_CreateGenresTable")]
+    [Migration("20240719071331_CreateGenresTable")]
     partial class CreateGenresTable
     {
         /// <inheritdoc />
@@ -24,7 +24,7 @@ namespace MoeKinoWebApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MoeKinoWebApp.Models.Genres", b =>
+            modelBuilder.Entity("MoeKinoWebApp.Models.Genre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

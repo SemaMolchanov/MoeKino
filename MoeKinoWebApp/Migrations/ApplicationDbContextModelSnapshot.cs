@@ -21,7 +21,7 @@ namespace MoeKinoWebApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MoeKinoWebApp.Models.Genres", b =>
+            modelBuilder.Entity("MoeKinoWebApp.Models.Genre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,7 +44,7 @@ namespace MoeKinoWebApp.Migrations
                     b.ToTable("Genres", (string)null);
                 });
 
-            modelBuilder.Entity("MoeKinoWebApp.Models.Movies", b =>
+            modelBuilder.Entity("MoeKinoWebApp.Models.Movie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
