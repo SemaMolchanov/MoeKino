@@ -12,6 +12,7 @@ public class ApplicationDbContext: DbContext{
     public DbSet<Genre> Genres { get; set; }
     public DbSet<Movie> Movies { get; set; }
     public DbSet<MovieGenre> MovieGenres { get; set; }
+    public DbSet<MovieImage> MovieImages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -55,6 +56,20 @@ public class ApplicationDbContext: DbContext{
                 .HasForeignKey(e => e.GenreID)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<MovieImage>(entity =>
+        {
+            entity.ToTable("MovieImages");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Image).IsRequired();
+            entity.Property(e => e.IsPoster).IsRequired();
+            entity.HasOne(e => e.Movie)
+                  .WithMany(m => m.MovieImages)
+                  .HasForeignKey(e => e.MovieId)
+                  .IsRequired()
+                  .OnDelete(DeleteBehavior.Cascade);
         });
     }
 
