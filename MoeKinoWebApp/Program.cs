@@ -9,6 +9,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
 ));
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -28,5 +29,10 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.MapAreaControllerRoute(
+    name: "admin_area",
+    areaName: "Admin",
+    pattern: "{area:exists}/{controller=Genres}/{action=Index}/{id?}");
 
 app.Run();
