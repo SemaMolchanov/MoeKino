@@ -6,7 +6,7 @@
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@model IEnumerable<Genre>
+@model IEnumerable<MovieImage>
 
 @{
     ViewData["Title"] = "Index";
@@ -16,11 +16,11 @@
 <div class="container pt-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Genres List</h2>
+            <h2 class="text-primary">MovieImages List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Genre", asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Create New Genre
+            <a asp-controller="MovieImage", asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New MovieImage
             </a>
         </div>
     </div>
@@ -34,10 +34,13 @@
                 Id
             </th>
             <th>
-                Name En
+                Image
             </th>
             <th>
-                Name Ru
+                Is Poster
+            </th>
+            <th>
+                MovieId
             </th>
             <th></th>
         </tr>
@@ -46,21 +49,21 @@
         @foreach(var obj in Model)
         {
             <tr>
-                <td width="30%">
+                <td width="25%">
                     @obj.Id
                 </td>
-                <td width="30%">
-                    @obj.NameEn
+                <td width="25%">
+                    <img src="data:image;base64,@Convert.ToBase64String(obj.Image)" alt="Movie Image" style="max-width: 100px; max-height: 100px;" />
                 </td>
-                <td width="30%">
-                    @obj.NameRu
+                <td width="25%">
+                    <input type="checkbox" disabled="disabled" @(obj.IsPoster ? "checked" : "") />
+                </td>
+                <td width="25%">
+                    @obj.MovieId
                 </td>
                 <td>
                     <div class="w-75 btn-group" role="group">
-                        <a asp-controller="Genre" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
-                            <i class="bi bi-pencil-square"></i> Edit
-                        </a>
-                        <a asp-controller="Genre" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                        <a asp-controller="MovieImage" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
                             <i class="bi bi-trash-fill"></i> Delete
                         </a>
                     </div>

@@ -33,6 +33,12 @@ app.MapRazorPages();
 app.MapAreaControllerRoute(
     name: "admin_area",
     areaName: "Admin",
-    pattern: "{area:exists}/{controller=Genres}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+
+app.MapAreaControllerRoute(
+    name: "admin_area_with_keys",
+    areaName: "Admin",
+    pattern: "{area:exists}/{controller}/{action}/{movieID}/{genreID}");
 
 app.Run();

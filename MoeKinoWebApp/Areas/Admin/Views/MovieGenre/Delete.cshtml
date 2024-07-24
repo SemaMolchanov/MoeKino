@@ -6,24 +6,24 @@
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@model Genre
+@model MovieGenre
 
 <form method="post" asp-action="DeletePOST">
-    <input asp-for="Id" hidden />
+    @*<input asp-for="Id" hidden />*@
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Delete Genre</h2>
             <hr>
         </div>
         <div class="mb-3">
-            <label asp-for="NameEn"></label>
-            <input asp-for="NameEn" disabled class="form-control" />
-            @*<span asp-validation-for="NameEn" class="text-danger"></span>*@
+            <label asp-for="MovieID"></label>
+            <input asp-for="MovieID" class="form-control" />
+            @*<span asp-validation-for="MovieID" class="text-danger"></span>*@
         </div>
         <div class="mb-3">
-            <label asp-for="NameRu"></label>
-            <input asp-for="NameRu" disabled class="form-control" />
-            @*<span asp-validation-for="NameRu" class="text-danger"></span>*@
+            <label asp-for="GenreID"></label>
+            <input asp-for="GenreID" class="form-control" />
+            @*<span asp-validation-for="GenreID" class="text-danger"></span>*@
         </div>
         <button type="submit" class="btn btn-danger" style="width:150px">Delete</button>
         <a asp-controller="Genre" asp-action="Index" class="btn btn-secondary" style="width:150px">

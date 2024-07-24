@@ -1,22 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MoeKinoWebApp.Data;
 using MoeKinoWebApp.Models;
 
 namespace MvcApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class GenreController : Controller
+    public class MovieController : Controller
     {
         private readonly ApplicationDbContext _db;
 
-        public GenreController(ApplicationDbContext db){
+        public MovieController(ApplicationDbContext db){
             _db = db;
         } 
 
         public IActionResult Index()
         {
-            IEnumerable<Genre> objGenreList = _db.Genres;
-            return View(objGenreList);
+            IEnumerable<Movie> objMovieList = _db.Movies;
+            return View(objMovieList);
         }
 
         public IActionResult Create()
@@ -26,11 +27,14 @@ namespace MvcApp.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreatePOST(Genre obj)
+        public IActionResult CreatePOST(Movie obj)
         {   
+            ModelState.Remove(nameof(obj.TrailerLinkEn));
+            ModelState.Remove(nameof(obj.TrailerLinkRu));
+
             if (ModelState.IsValid)
             {
-                _db.Genres.Add(obj);
+                _db.Movies.Add(obj);
                 _db.SaveChanges();
             }
             return RedirectToAction("Index");
@@ -42,22 +46,24 @@ namespace MvcApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var genreFromDb = _db.Genres.Find(id);
+            var MovieFromDb = _db.Movies.Find(id);
 
-            if (genreFromDb == null){
+            if (MovieFromDb == null){
                 return NotFound();
             }
 
-            return View(genreFromDb);
+            return View(MovieFromDb);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditPOST(Genre obj)
+        public IActionResult EditPOST(Movie obj)
         {   
-            if (ModelState.IsValid)
-            {
-                _db.Genres.Update(obj);
+            ModelState.Remove(nameof(obj.TrailerLinkEn));
+            ModelState.Remove(nameof(obj.TrailerLinkRu));
+
+            if (ModelState.IsValid){
+                _db.Movies.Update(obj);
                 _db.SaveChanges();
             }
             return RedirectToAction("Index");
@@ -69,27 +75,27 @@ namespace MvcApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var genreFromDb = _db.Genres.Find(id);
+            var MovieFromDb = _db.Movies.Find(id);
 
-            if (genreFromDb == null){
+            if (MovieFromDb == null){
                 return NotFound();
             }
 
-            return View(genreFromDb);
+            return View(MovieFromDb);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(int id)
         {   
-            var obj = _db.Genres.Find(id);
+            var obj = _db.Movies.Find(id);
 
             if (obj == null)
             {
                 return NotFound();
             }
 
-            _db.Genres.Remove(obj);
+            _db.Movies.Remove(obj);
             _db.SaveChanges();
 
             return RedirectToAction("Index");
