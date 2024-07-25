@@ -6,7 +6,7 @@
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@model IEnumerable<MovieParticipantCategory>
+@model IEnumerable<MovieParticipant>
 
 @{
     ViewData["Title"] = "Index";
@@ -16,11 +16,11 @@
 <div class="container pt-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">MovieParticipantCategories List</h2>
+            <h2 class="text-primary">MovieParticipants List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="MoviePaticipantCategory", asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Create New MovieParticipantCategory
+            <a asp-controller="MovieParticipant", asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New MovieParticipant
             </a>
         </div>
     </div>
@@ -31,13 +31,13 @@
     <thead>
         <tr>
             <th>
-                Id
+                Movie ID
             </th>
             <th>
-                Name En
+                Person ID
             </th>
             <th>
-                Name Ru
+                Movie Participant Category ID
             </th>
             <th></th>
         </tr>
@@ -47,20 +47,20 @@
         {
             <tr>
                 <td width="30%">
-                    @obj.Id
+                    @obj.MovieID
                 </td>
                 <td width="30%">
-                    @obj.NameEn
+                    @obj.PersonID
                 </td>
                 <td width="30%">
-                    @obj.NameRu
+                    @obj.MovieParticipantCategoryID
                 </td>
                 <td>
                     <div class="w-75 btn-group" role="group">
-                        <a asp-controller="MovieParticipantCategory" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                        <a asp-controller="MovieParticipant" asp-action="Edit" asp-route-MovieID="@obj.MovieID" asp-route-GenreID="@obj.PersonID" asp-route-MovieParticipantCategoryID="@obj.MovieParticipantCategoryID" class="btn btn-primary mx-2">
                             <i class="bi bi-pencil-square"></i> Edit
                         </a>
-                        <a asp-controller="MovieParticipantCategory" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                        <a asp-controller="MovieParticipant" asp-action="Delete" asp-route-MovieID="@obj.MovieID" asp-route-GenreID="@obj.PersonID" asp-route-MovieParticipantCategoryID="@obj.MovieParticipantCategoryID" class="btn btn-danger mx-2">
                             <i class="bi bi-trash-fill"></i> Delete
                         </a>
                     </div>

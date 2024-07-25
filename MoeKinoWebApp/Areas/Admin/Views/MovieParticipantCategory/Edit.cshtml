@@ -6,12 +6,12 @@
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@model MoviePaticipantCategory
+@model MovieParticipantCategory
 
 <form method="post" asp-action="EditPOST">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Edit MoviePaticipantCategory</h2>
+            <h2 class="text-primary">Edit MovieParticipantCategory</h2>
             <hr>
         </div>
         <div class="mb-3">
@@ -25,7 +25,7 @@
             <span asp-validation-for="NameRu" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
-        <a asp-controller="MoviePaticipantCategory" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        <a asp-controller="MovieParticipantCategory" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
     </div>

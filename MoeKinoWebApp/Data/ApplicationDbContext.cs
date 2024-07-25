@@ -13,9 +13,9 @@ public class ApplicationDbContext: DbContext{
     public DbSet<Movie> Movies { get; set; }
     public DbSet<MovieGenre> MovieGenres { get; set; }
     public DbSet<MovieImage> MovieImages { get; set; }
-    public DbSet<MoviePaticipantCategory> MoviePaticipantCategories {get; set;}
-
+    public DbSet<MovieParticipantCategory> MovieParticipantCategories {get; set;}
     public DbSet<Person> Persons { get; set;}
+    public DbSet<MovieParticipant> MovieParticipants { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -75,7 +75,7 @@ public class ApplicationDbContext: DbContext{
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<MoviePaticipantCategory>(entity =>
+        modelBuilder.Entity<MovieParticipantCategory>(entity =>
         {
             entity.ToTable("MovieParticipantCategories");
             entity.HasKey(e => e.Id);
@@ -94,6 +94,30 @@ public class ApplicationDbContext: DbContext{
             entity.Property(e => e.FullNameRu).IsRequired().HasMaxLength(200);
             entity.Property(e => e.ShortBioEn).IsRequired(false).HasColumnType("nvarchar(MAX)");
             entity.Property(e => e.ShortBioRu).IsRequired(false).HasColumnType("nvarchar(MAX)");
+        });
+
+        modelBuilder.Entity<MovieParticipant>(entity =>
+        {
+            entity.ToTable("MovieParticipants");
+            entity.HasKey(e => new { e.MovieID, e.PersonID, e.MovieParticipantCategoryID });
+
+            entity.HasOne(e => e.Movie)
+                .WithMany(m => m.MovieParticipants)
+                .HasForeignKey(e => e.MovieID)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Person)
+                .WithMany(p => p.MovieParticipants)
+                .HasForeignKey(e => e.PersonID)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.MovieParticipantCategory)
+                .WithMany(mpc => mpc.MovieParticipants)
+                .HasForeignKey(e => e.MovieParticipantCategoryID)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 

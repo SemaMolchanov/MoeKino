@@ -5,18 +5,18 @@ using MoeKinoWebApp.Models;
 namespace MvcApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class MoviePaticipantCategoryController : Controller
+    public class MovieParticipantCategoryController : Controller
     {
         private readonly ApplicationDbContext _db;
 
-        public MoviePaticipantCategoryController(ApplicationDbContext db){
+        public MovieParticipantCategoryController(ApplicationDbContext db){
             _db = db;
         } 
 
         public IActionResult Index()
         {
-            IEnumerable<MoviePaticipantCategory> objMoviePaticipantCategoryList = _db.MoviePaticipantCategories;
-            return View(objMoviePaticipantCategoryList);
+            IEnumerable<MovieParticipantCategory> objMovieParticipantCategoryList = _db.MovieParticipantCategories;
+            return View(objMovieParticipantCategoryList);
         }
 
         public IActionResult Create()
@@ -26,11 +26,11 @@ namespace MvcApp.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreatePOST(MoviePaticipantCategory obj)
+        public IActionResult CreatePOST(MovieParticipantCategory obj)
         {   
             if (ModelState.IsValid)
             {
-                _db.MoviePaticipantCategories.Add(obj);
+                _db.MovieParticipantCategories.Add(obj);
                 _db.SaveChanges();
             }
             return RedirectToAction("Index");
@@ -42,22 +42,22 @@ namespace MvcApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var MoviePaticipantCategoryFromDb = _db.MoviePaticipantCategories.Find(id);
+            var MovieParticipantCategoryFromDb = _db.MovieParticipantCategories.Find(id);
 
-            if (MoviePaticipantCategoryFromDb == null){
+            if (MovieParticipantCategoryFromDb == null){
                 return NotFound();
             }
 
-            return View(MoviePaticipantCategoryFromDb);
+            return View(MovieParticipantCategoryFromDb);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditPOST(MoviePaticipantCategory obj)
+        public IActionResult EditPOST(MovieParticipantCategory obj)
         {   
             if (ModelState.IsValid)
             {
-                _db.MoviePaticipantCategories.Update(obj);
+                _db.MovieParticipantCategories.Update(obj);
                 _db.SaveChanges();
             }
             return RedirectToAction("Index");
@@ -69,27 +69,27 @@ namespace MvcApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var MoviePaticipantCategoryFromDb = _db.MoviePaticipantCategories.Find(id);
+            var MovieParticipantCategoryFromDb = _db.MovieParticipantCategories.Find(id);
 
-            if (MoviePaticipantCategoryFromDb == null){
+            if (MovieParticipantCategoryFromDb == null){
                 return NotFound();
             }
 
-            return View(MoviePaticipantCategoryFromDb);
+            return View(MovieParticipantCategoryFromDb);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(int id)
         {   
-            var obj = _db.MoviePaticipantCategories.Find(id);
+            var obj = _db.MovieParticipantCategories.Find(id);
 
             if (obj == null)
             {
                 return NotFound();
             }
 
-            _db.MoviePaticipantCategories.Remove(obj);
+            _db.MovieParticipantCategories.Remove(obj);
             _db.SaveChanges();
 
             return RedirectToAction("Index");

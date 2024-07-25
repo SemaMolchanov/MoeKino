@@ -11,7 +11,8 @@ public class Person
 
     public string FullNameRu { get; set; }
 
-    public string ShortBioEn {get; set;}
+    public string ShortBioEn { get; set;}
 
-    public string ShortBioRu {get; set;}
+    public string ShortBioRu { get; set;}
+    public ICollection<MovieParticipant> MovieParticipants { get; set; } = new List<MovieParticipant>();
 }
