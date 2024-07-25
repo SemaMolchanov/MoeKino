@@ -13,6 +13,7 @@ public class ApplicationDbContext: DbContext{
     public DbSet<Movie> Movies { get; set; }
     public DbSet<MovieGenre> MovieGenres { get; set; }
     public DbSet<MovieImage> MovieImages { get; set; }
+    public DbSet<MoviePaticipantCategory> MoviePaticipantCategories {get; set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -70,6 +71,15 @@ public class ApplicationDbContext: DbContext{
                   .HasForeignKey(e => e.MovieId)
                   .IsRequired()
                   .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<MoviePaticipantCategory>(entity =>
+        {
+            entity.ToTable("MovieParticipantCategories");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.NameEn).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.NameRu).IsRequired().HasMaxLength(50);
         });
     }
 
