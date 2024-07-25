@@ -15,6 +15,8 @@ public class ApplicationDbContext: DbContext{
     public DbSet<MovieImage> MovieImages { get; set; }
     public DbSet<MoviePaticipantCategory> MoviePaticipantCategories {get; set;}
 
+    public DbSet<Person> Persons { get; set;}
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -80,6 +82,18 @@ public class ApplicationDbContext: DbContext{
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.NameEn).IsRequired().HasMaxLength(50);
             entity.Property(e => e.NameRu).IsRequired().HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Person>(entity =>
+        {
+            entity.ToTable("Persons");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.BirthDate).IsRequired();
+            entity.Property(e => e.FullNameEn).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.FullNameRu).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.ShortBioEn).IsRequired(false).HasColumnType("nvarchar(MAX)");
+            entity.Property(e => e.ShortBioRu).IsRequired(false).HasColumnType("nvarchar(MAX)");
         });
     }
 
