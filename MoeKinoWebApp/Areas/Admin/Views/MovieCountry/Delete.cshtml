@@ -6,12 +6,13 @@
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@model MovieParticipant
+@model MovieCountry
 
 <form method="post" asp-action="DeletePOST">
+    @*<input asp-for="Id" hidden />*@
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Delete Genre</h2>
+            <h2 class="text-primary">Delete Country</h2>
             <hr>
         </div>
         <div class="mb-3">
@@ -20,17 +21,12 @@
             @*<span asp-validation-for="MovieID" class="text-danger"></span>*@
         </div>
         <div class="mb-3">
-            <label asp-for="PersonID"></label>
-            <input asp-for="PersonID" class="form-control" />
-            @*<span asp-validation-for="PersonID" class="text-danger"></span>*@
-        </div>
-        <div class="mb-3">
-            <label asp-for="MovieParticipantCategoryID"></label>
-            <input asp-for="MovieParticipantCategoryID" class="form-control" />
-            @*<span asp-validation-for="MovieParticipantCategoryID" class="text-danger"></span>*@
+            <label asp-for="CountryID"></label>
+            <input asp-for="CountryID" class="form-control" />
+            @*<span asp-validation-for="CountryID" class="text-danger"></span>*@
         </div>
         <button type="submit" class="btn btn-danger" style="width:150px">Delete</button>
-        <a asp-controller="MovieParticipant" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        <a asp-controller="MovieCountry" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
     </div>

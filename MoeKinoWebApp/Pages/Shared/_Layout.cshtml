@@ -8,6 +8,42 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MoeKinoWebApp.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+        .carousel {
+            overflow: hidden; /* Убирает ненужные прокрутки */
+        }
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+        }
+        .carousel-item{
+            flex: 0 0 auto;
+            width: 50%; /* Показывает 6 элементов в ряд */
+            margin-right: 10px; /* Отступ между элементами */
+        }
+
+        .carousel-inner {
+            /*height: 300px; /* Вы можете настроить высоту по своему усмотрению */
+            display: flex;
+        }
+        .carousel-caption {
+            position: static; /* Отменяет позиционирование на изображении */
+            margin-top: 10px; /* Отступ сверху от изображения */
+        }
+        .search-input-wrapper {
+            position: relative;
+        }
+        .search-input-wrapper input {
+            padding-left: 2.5rem; /* Отступ для иконки */
+        }
+        .search-input-wrapper .bi-search {
+            position: absolute;
+            top: 50%;
+            left: 0.5rem;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -27,31 +63,22 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Genre" asp-action="Index">Genres</a>
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Initial" asp-action="Index">Admin</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Movie" asp-action="Index">Movies</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="MovieImage" asp-action="Index">Movie Images</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="MovieGenre" asp-action="Index">Movie Genres</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="MovieParticipantCategory" asp-action="Index">Movie Participant Categories</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Person" asp-action="Index">Persons</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="MovieParticipant" asp-action="Index">Movie Participants</a>
+                            <a class="nav-link text-dark" asp-area="Main" asp-controller="MovieList" asp-action="Index">Main</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+    <div class="container mt-4">
+        <div class="search-input-wrapper">
+            <input type="text" class="form-control" placeholder="Search...">
+            <i class="bi bi-search"></i>
+        </div>
+    </div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

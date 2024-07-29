@@ -1,7 +1,7 @@
 ﻿@using MoeKinoWebApp.Models;
 
 @{
-    Layout = "_Layout";
+    Layout = "_LayoutAdmin";
 }
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -57,10 +57,7 @@
                 </td>
                 <td>
                     <div class="w-75 btn-group" role="group">
-                        <a asp-controller="MovieParticipant" asp-action="Edit" asp-route-MovieID="@obj.MovieID" asp-route-GenreID="@obj.PersonID" asp-route-MovieParticipantCategoryID="@obj.MovieParticipantCategoryID" class="btn btn-primary mx-2">
-                            <i class="bi bi-pencil-square"></i> Edit
-                        </a>
-                        <a asp-controller="MovieParticipant" asp-action="Delete" asp-route-MovieID="@obj.MovieID" asp-route-GenreID="@obj.PersonID" asp-route-MovieParticipantCategoryID="@obj.MovieParticipantCategoryID" class="btn btn-danger mx-2">
+                        <a asp-controller="MovieParticipant" asp-action="Delete" asp-route-MovieID="@obj.MovieID" asp-route-PersonID="@obj.PersonID" asp-route-MovieParticipantCategoryID="@obj.MovieParticipantCategoryID" class="btn btn-danger mx-2">
                             <i class="bi bi-trash-fill"></i> Delete
                         </a>
                     </div>

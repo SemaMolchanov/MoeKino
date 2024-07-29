@@ -6,13 +6,12 @@
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@model MovieParticipantCategory
+@model Country
 
-<form method="post" asp-action="EditPOST">
-    <input asp-for="Id" hidden />
+<form method="post" asp-action="CreatePOST">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Edit MovieParticipantCategory</h2>
+            <h2 class="text-primary">Create Country</h2>
             <hr>
         </div>
         <div class="mb-3">
@@ -25,8 +24,8 @@
             <input asp-for="NameRu" class="form-control" />
             <span asp-validation-for="NameRu" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
-        <a asp-controller="MovieParticipantCategory" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+        <a asp-controller="Country" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
     </div>

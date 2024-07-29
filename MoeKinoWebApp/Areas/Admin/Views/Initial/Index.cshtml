@@ -1,0 +1,17 @@
+@using MoeKinoWebApp.Models;
+
+@{
+    Layout = "_LayoutAdmin";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>To manage database click on the links on the naviagation bar to access tables.</p>
+    <a asp-area="" asp-page="/Index">Back to Main Page</a>
+</div>

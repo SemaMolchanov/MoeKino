@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoeKinoWebApp.Data;
 
@@ -11,9 +12,11 @@ using MoeKinoWebApp.Data;
 namespace MoeKinoWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240726105614_CreateCountiresTable")]
+    partial class CreateCountiresTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,21 +111,6 @@ namespace MoeKinoWebApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Movies", (string)null);
-                });
-
-            modelBuilder.Entity("MoeKinoWebApp.Models.MovieCountry", b =>
-                {
-                    b.Property<int>("MovieID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CountryID")
-                        .HasColumnType("int");
-
-                    b.HasKey("MovieID", "CountryID");
-
-                    b.HasIndex("CountryID");
-
-                    b.ToTable("MovieCountries", (string)null);
                 });
 
             modelBuilder.Entity("MoeKinoWebApp.Models.MovieGenre", b =>
@@ -240,25 +228,6 @@ namespace MoeKinoWebApp.Migrations
                     b.ToTable("Persons", (string)null);
                 });
 
-            modelBuilder.Entity("MoeKinoWebApp.Models.MovieCountry", b =>
-                {
-                    b.HasOne("MoeKinoWebApp.Models.Country", "Country")
-                        .WithMany("MovieCountries")
-                        .HasForeignKey("CountryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MoeKinoWebApp.Models.Movie", "Movie")
-                        .WithMany("MovieCountries")
-                        .HasForeignKey("MovieID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Country");
-
-                    b.Navigation("Movie");
-                });
-
             modelBuilder.Entity("MoeKinoWebApp.Models.MovieGenre", b =>
                 {
                     b.HasOne("MoeKinoWebApp.Models.Genre", "Genre")
@@ -316,11 +285,6 @@ namespace MoeKinoWebApp.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("MoeKinoWebApp.Models.Country", b =>
-                {
-                    b.Navigation("MovieCountries");
-                });
-
             modelBuilder.Entity("MoeKinoWebApp.Models.Genre", b =>
                 {
                     b.Navigation("MovieGenres");
@@ -328,8 +292,6 @@ namespace MoeKinoWebApp.Migrations
 
             modelBuilder.Entity("MoeKinoWebApp.Models.Movie", b =>
                 {
-                    b.Navigation("MovieCountries");
-
                     b.Navigation("MovieGenres");
 
                     b.Navigation("MovieImages");

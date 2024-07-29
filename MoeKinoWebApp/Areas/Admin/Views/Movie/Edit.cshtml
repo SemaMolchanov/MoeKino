@@ -9,6 +9,7 @@
 @model Movie
 
 <form method="post" asp-action="EditPOST">
+    <input asp-for="Id" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Edit Movie</h2>
@@ -57,8 +58,3 @@
 </form>
 
 
-@section Scripts{
-    @{
-        <partial name="_ValidationScriptsPartial" />
-    }
-}

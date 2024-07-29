@@ -16,6 +16,8 @@ public class ApplicationDbContext: DbContext{
     public DbSet<MovieParticipantCategory> MovieParticipantCategories {get; set;}
     public DbSet<Person> Persons { get; set;}
     public DbSet<MovieParticipant> MovieParticipants { get; set; }
+    public DbSet<Country> Countries { get; set; }
+    public DbSet<MovieCountry> MovieCountries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -116,6 +118,33 @@ public class ApplicationDbContext: DbContext{
                 entity.HasOne(e => e.MovieParticipantCategory)
                 .WithMany(mpc => mpc.MovieParticipants)
                 .HasForeignKey(e => e.MovieParticipantCategoryID)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Country>(entity =>
+        {
+            entity.ToTable("Countries");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.NameEn).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.NameRu).IsRequired().HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<MovieCountry>(entity =>
+        {
+            entity.ToTable("MovieCountries");
+            entity.HasKey(e => new { e.MovieID, e.CountryID });
+
+            entity.HasOne(e => e.Movie)
+                .WithMany(m => m.MovieCountries)
+                .HasForeignKey(e => e.MovieID)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Country)
+                .WithMany(c => c.MovieCountries)
+                .HasForeignKey(e => e.CountryID)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
         });

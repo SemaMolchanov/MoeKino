@@ -6,7 +6,7 @@
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@model IEnumerable<MovieParticipantCategory>
+@model IEnumerable<Country>
 
 @{
     ViewData["Title"] = "Index";
@@ -16,11 +16,11 @@
 <div class="container pt-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">MovieParticipantCategories List</h2>
+            <h2 class="text-primary">Countries List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="MovieParticipantCategory", asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Create New MovieParticipantCategory
+            <a asp-controller="Country", asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Country
             </a>
         </div>
     </div>
@@ -57,10 +57,10 @@
                 </td>
                 <td>
                     <div class="w-75 btn-group" role="group">
-                        <a asp-controller="MovieParticipantCategory" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                        <a asp-controller="Country" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
                             <i class="bi bi-pencil-square"></i> Edit
                         </a>
-                        <a asp-controller="MovieParticipantCategory" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                        <a asp-controller="Country" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
                             <i class="bi bi-trash-fill"></i> Delete
                         </a>
                     </div>
