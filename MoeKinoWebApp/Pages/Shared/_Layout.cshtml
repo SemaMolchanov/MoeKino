@@ -3,38 +3,49 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Moe Kino</title>
+    <title>@ViewData["Title"] Index - Moe Kino</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MoeKinoWebApp.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <style>
-        .carousel {
-            overflow: hidden; /* Убирает ненужные прокрутки */
-        }
-        .carousel-item img {
-            width: 100%;
-            height: auto;
-        }
-        .carousel-item{
-            flex: 0 0 auto;
-            width: 50%; /* Показывает 6 элементов в ряд */
-            margin-right: 10px; /* Отступ между элементами */
+        .carousel-inner {
+            display: flex;
+            overflow: hidden;
         }
 
-        .carousel-inner {
-            /*height: 300px; /* Вы можете настроить высоту по своему усмотрению */
+        .carousel-content {
             display: flex;
+            flex-wrap: nowrap;
+            transition: transform 0.5s ease;
         }
-        .carousel-caption {
-            position: static; /* Отменяет позиционирование на изображении */
+
+        .carousel-item-content {
+            flex: 0 0 auto;
+            width: 200px; /* Ширина одного слайда */
+            margin-right: 15px; /* Отступ между слайдами */
+            text-align: center; /* Центрирование текста */
+        }
+
+        .carousel-item-content img {
+            width: 100%; /* Адаптация изображения к ширине слайда */
+            height: auto; /* Сохранение пропорций изображения */
+        }
+
+        .movie-title {
             margin-top: 10px; /* Отступ сверху от изображения */
         }
+
+        .carousel-control-prev, .carousel-control-next {
+            width: 5%; /* Ширина стрелочек в процентах */
+            color: black; /* Цвет стрелочек */
+        }
+
         .search-input-wrapper {
             position: relative;
         }
         .search-input-wrapper input {
-            padding-left: 2.5rem; /* Отступ для иконки */
+            padding-left: 2.5rem; 
         }
         .search-input-wrapper .bi-search {
             position: absolute;

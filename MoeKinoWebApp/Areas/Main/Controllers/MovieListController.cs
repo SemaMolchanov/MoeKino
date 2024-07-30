@@ -16,9 +16,12 @@ namespace MvcApp.Areas.Main.Controllers
             _db = db;
         } 
 
-        [HttpGet("MovieList/Index")]
         public IActionResult Index()
         {
+            ViewData["Genres"] = _db.Genres.ToList();
+            ViewData["Countries"] = _db.Countries.ToList();
+            ViewData["Years"] = _db.Movies.Select(m => m.ReleaseYear).Distinct().OrderByDescending(y => y).ToList();
+
             var moviesWithDetails = _db.Movies
                 .Select(movie => new
                 {
@@ -51,7 +54,7 @@ namespace MvcApp.Areas.Main.Controllers
                 .Distinct()
                 .ToDictionary(
                 genre => genre.GenreId,
-                genre => new MovieViewModel
+                genre => new MovieListViewModel
                 {
                     GenreName = genre.Name,
                     Movies = moviesWithDetails
@@ -70,6 +73,47 @@ namespace MvcApp.Areas.Main.Controllers
             return View(groupedMovies);
         }
 
-        
+        public IActionResult MovieDetails(int? id)
+        {
+            var movie = _db.Movies
+                .Include(m => m.MovieGenres)
+                .ThenInclude(mg => mg.Genre)
+                .Include(m => m.MovieCountries)
+                .ThenInclude(mc => mc.Country)
+                .Include(m => m.MovieImages)
+                .Include(m => m.MovieParticipants)
+                .ThenInclude(mp => mp.Person)
+                .Include(m => m.MovieParticipants)
+                .ThenInclude(mp => mp.MovieParticipantCategory)
+                .FirstOrDefault(m => m.Id == id);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+
+            var movieDetails = new MovieDetailsViewModel
+            {
+                Title = movie.TitleEn,
+                Description = movie.DescriptionEn,
+                TrailerLink = movie.TrailerLinkEn,
+                Poster = movie.MovieImages.FirstOrDefault(mi => mi.IsPoster) != null 
+                ? Convert.ToBase64String(movie.MovieImages.FirstOrDefault(mi => mi.IsPoster).Image) 
+                : null,
+                Genres = movie.MovieGenres.Select(mg => mg.Genre.NameEn).ToList(),
+                Countries = movie.MovieCountries.Select(mc => mc.Country.NameEn).ToList(),
+                Participants = movie.MovieParticipants
+                    .GroupBy(mp => mp.MovieParticipantCategory.NameEn)
+                    .ToDictionary(
+                        grp => grp.Key,
+                        grp => grp.Select(mp => mp.Person).ToList()
+                    ),
+                Images = movie.MovieImages.Where(mi => !mi.IsPoster).ToDictionary(mi => mi.Id, mi => Convert.ToBase64String(mi.Image))
+            };
+
+
+            return View(movieDetails);
+        }
     }
 }

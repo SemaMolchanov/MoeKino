@@ -1,6 +1,6 @@
 namespace MoeKinoWebApp.Models;
 
-public class MovieViewModel
+public class MovieListViewModel
 {
     public string GenreName { get; set; }
     public List<MovieDetail> Movies { get; set; }

@@ -1,5 +1,11 @@
 @using MoeKinoWebApp.Models
-@model Dictionary<int, MovieViewModel>
+@model Dictionary<int, MovieListViewModel>
+
+@{
+    var genres = ViewData["Genres"] as List<Genre>;
+    var countries = ViewData["Countries"] as List<Country>;
+    var years = ViewData["Years"] as List<int>;
+}
 
 @{
     Layout = "_Layout";
@@ -7,41 +13,80 @@
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-
-<div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-primary">Movies List</h2>
-        </div>
-</div>
-<br>
 <div class="container mt-4">
+    <div class="row">
+        <!-- Release Year Select -->
+        <div class="col-md-4">
+            <label for="yearSelect">Release Year</label>
+            <select id="yearSelect" class="form-control">
+                <option value="">Select Year</option>
+                @foreach (var year in years)
+                {
+                    <option value="@year">@year</option>
+                }
+            </select>
+        </div>
 
+        <!-- Genre Select -->
+        <div class="col-md-4">
+            <label for="genreSelect">Genre</label>
+            <select id="genreSelect" class="form-control">
+                <option value="">Select Genre</option>
+                @foreach (var genre in genres)
+                {
+                    <option value="@genre.Id">@genre.NameEn</option>
+                }
+            </select>
+        </div>
+
+        <!-- Country Select -->
+        <div class="col-md-4">
+            <label for="countrySelect">Country</label>
+            <select id="countrySelect" class="form-control">
+                <option value="">Select Country</option>
+                @foreach (var country in countries)
+                {
+                    <option value="@country.Id">@country.NameEn</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-4">
+    <div class="row">
         @foreach (var genre in Model)
         {   
             var genreId = genre.Key;
             var genreData = genre.Value;
-            <div class="col-md-3 carousel-container">
+            <div class="col-md-12">
                 <div id="carousel-@genreId" class="carousel slide" data-ride="carousel">
                     <h3>@genreData.GenreName</h3>
                     <div class="carousel-inner">
-                        @for (int i = 0; i < genreData.Movies.Count; i++)
-                        {
-                            var movie = genreData.Movies[i];
-                            <div class="carousel-item active">
-                                <a href="/MovieList/MovieDetails/@movie.Id"></a>
-                                @if (!string.IsNullOrEmpty(movie.Poster))
+                        <div class="carousel-item active">
+                            <div class="carousel-content">
+                                @for (int i = 0; i < genreData.Movies.Count; i++)
                                 {
-                                    <img class="d-block w-100" src="data:image/jpeg;base64,@movie.Poster" alt="@movie.Title">
+                                    var movie = genreData.Movies[i];
+                                    <div class="carousel-item-content">
+                                        @if (!string.IsNullOrEmpty(movie.Poster))
+                                        {
+                                            <img class="d-block w-100" src="data:image/jpeg;base64,@movie.Poster" alt="@movie.Title">
+                                        }
+                                        else
+                                        {
+                                            <div class="d-block w-100 bg-dark text-white text-center p-5">No Poster</div>
+                                        }
+                                        <div class="movie-title">
+                                            <a asp-area="Main" asp-controller="MovieList" asp-action="MovieDetails" asp-route-id="@movie.Id">
+                                                <h5>@movie.Title</h5>
+                                            </a>
+                                        </div>
+                                    </div>
                                 }
-                                else
-                                {
-                                    <div class="d-block w-100 bg-dark text-white text-center p-5">No Poster</div>
-                                }
-                                <div class="carousel-caption d-none d-md-block text-black">
-                                    <h5>@movie.Title</h5>
-                                </div>
                             </div>
-                        }
+                        </div>
                     </div>
                     <a class="carousel-control-prev" href="#carousel-@genreId" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -52,8 +97,39 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
-                
             </div>
         }
-
+    </div>
 </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const carousels = document.querySelectorAll('.carousel');
+
+    carousels.forEach(carousel => {
+        const prevButton = carousel.querySelector('.carousel-control-prev');
+        const nextButton = carousel.querySelector('.carousel-control-next');
+        const content = carousel.querySelector('.carousel-content');
+        const items = content.children.length;
+        const itemWidth = content.querySelector('.carousel-item-content').offsetWidth;
+        const visibleItems = Math.floor(carousel.offsetWidth / itemWidth);
+        let index = 0;
+
+        nextButton.addEventListener('click', () => {
+            if (index < items - visibleItems) {
+                index++;
+                content.style.transform = `translateX(-${index * itemWidth}px)`;
+            }
+        });
+
+        prevButton.addEventListener('click', () => {
+            if (index > 0) {
+                index--;
+                content.style.transform = `translateX(-${index * itemWidth}px)`;
+            }
+        });
+    });
+});
+</script>
+

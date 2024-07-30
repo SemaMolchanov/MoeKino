@@ -1,0 +1,62 @@
+@using MoeKinoWebApp.Models
+
+@{
+    Layout = "_Layout";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model MovieDetailsViewModel
+
+<div class="container mt-4">
+    <a asp-controller="MovieList" asp-action="Index" class="btn btn-secondary" style="width:200px">
+            Back to Movie List
+        </a>
+    <h1>@Model.Title</h1>
+    @if (!string.IsNullOrEmpty(Model.Description))
+    {
+        <p>@Model.Description</p>
+    }
+    @if (!string.IsNullOrEmpty(Model.Poster))
+    {
+        <img src="data:image/jpeg;base64,@Model.Poster" class="img-fluid" alt="Poster">
+    }
+    @if (!string.IsNullOrEmpty(Model.TrailerLink))
+    {
+        <a href="@Model.TrailerLink" class="btn btn-primary trailer-button" target="_blank">Watch Trailer</a>
+    }
+    <h3>Genres:</h3>
+    <ul>
+        @foreach (var genre in Model.Genres)
+        {
+            <li>@genre</li>
+        }
+    </ul>
+    <h3>Countries:</h3>
+    <ul>
+        @foreach (var country in Model.Countries)
+        {
+            <li>@country</li>
+        }
+    </ul>
+    <h3>Participants:</h3>
+    @foreach (var category in Model.Participants)
+    {
+        <h4>@category.Key:</h4>
+        <ul>
+            @foreach (var person in category.Value)
+            {
+                <li>@person.FullNameEn @person.BirthDate @person.ShortBioEn</li>
+            }
+        </ul>
+    }
+    <h3>Images:</h3>
+    <div class="row">
+        @foreach (var image in Model.Images)
+        {
+            <div class="col-md-4 mb-3">
+                <img src="data:image/jpeg;base64,@image.Value" class="img-fluid" alt="Image">
+            </div>
+        }
+    </div>
+</div>
