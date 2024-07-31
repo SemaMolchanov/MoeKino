@@ -9,10 +9,10 @@
 @model MovieDetailsViewModel
 
 <div class="container mt-4">
-    <a asp-controller="MovieList" asp-action="Index" class="btn btn-secondary" style="width:200px">
-        Back to Movie Carousel
+    <a data-i18n="back-to-main" asp-controller="MovieList" asp-action="Index" class="btn btn-secondary" style="width:200px">
+        Back to Main
     </a>
-    <a asp-controller="MovieList" asp-action="MovieList" class="btn btn-secondary" style="width:200px">
+    <a data-i18n="back-to-movie-list" asp-controller="MovieList" asp-action="MovieList" class="btn btn-secondary" style="width:200px">
         Back to Movie List
     </a>
     <h1>@Model.Title</h1>
@@ -26,39 +26,39 @@
     }
     @if (!string.IsNullOrEmpty(Model.TrailerLink))
     {
-        <a href="@Model.TrailerLink" class="btn btn-primary trailer-button" target="_blank">Watch Trailer</a>
+        <a href="@Model.TrailerLink" class="btn btn-primary trailer-button" target="_blank" data-i18n="watch-trailer">Watch Trailer</a>
     }
-    <h3>Genres:</h3>
+    <h3 data-i18n="genres">Genres:</h3>
     <ul>
         @foreach (var genre in Model.Genres)
         {
-            <li>@genre</li>
+            <li>@genre.Name</li>
         }
     </ul>
-    <h3>Countries:</h3>
+    <h3 data-i18n="countries">Countries:</h3>
     <ul>
         @foreach (var country in Model.Countries)
         {
-            <li>@country</li>
+            <li>@country.Name</li>
         }
     </ul>
-    <h3>Participants:</h3>
+    <h3 data-i18n="participants">Participants:</h3>
     @foreach (var category in Model.Participants)
     {
         <h4>@category.Key:</h4>
         <ul>
             @foreach (var person in category.Value)
             {
-                <li>@person.FullNameEn @person.BirthDate @person.ShortBioEn</li>
+                <li>@person.FullName @person.BirthDate @person.ShortBio</li>
             }
         </ul>
     }
-    <h3>Images:</h3>
+    <h3 data-i18n="images">Images:</h3>
     <div class="row">
         @foreach (var image in Model.Images)
         {
             <div class="col-md-4 mb-3">
-                <img src="data:image/jpeg;base64,@image.Value" class="img-fluid" alt="Image">
+                <img src="data:image/jpeg;base64,@image.Image" class="img-fluid" alt="Image">
             </div>
         }
     </div>

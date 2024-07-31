@@ -5,10 +5,10 @@ public class MovieListViewModel
     public List<MovieViewModel> Movies { get; set; }
     
     // Список жанров для фильтрации
-    public List<Genre> Genres { get; set; }
+    public List<GenreMovieListViewModel> Genres { get; set; }
     
     // Список стран для фильтрации
-    public List<Country> Countries { get; set; }
+    public List<CountryMovieListViewModel> Countries { get; set; }
     
     // Список годов выпуска для фильтрации
     public List<int> Years { get; set; }
@@ -21,6 +21,18 @@ public class MovieViewModel
     public string Poster { get; set; } // Base64 изображение постера
     public string Description { get; set; } // Описание фильма
     public int ReleaseYear { get; set; }
-    public List<Genre> Genres { get; set; } // Список жанров
-    public List<Country> Countries { get; set; } // Список стран
+    public List<GenreMovieListViewModel> Genres { get; set; } // Список жанров
+    public List<CountryMovieListViewModel> Countries { get; set; } // Список стран
+}
+
+public class GenreMovieListViewModel
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+
+public class CountryMovieListViewModel
+{
+    public int Id { get; set; }
+    public string Name { get; set; } 
 }

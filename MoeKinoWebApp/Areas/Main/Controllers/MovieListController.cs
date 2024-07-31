@@ -12,33 +12,33 @@ namespace MvcApp.Areas.Main.Controllers
     {
         private readonly ApplicationDbContext _db;
 
-        public MovieListController(ApplicationDbContext db){
+        public MovieListController(ApplicationDbContext db)
+        {
             _db = db;
         } 
 
-        public IActionResult Index()
-        {
-            ViewData["Genres"] = _db.Genres.ToList();
-            ViewData["Countries"] = _db.Countries.ToList();
-            ViewData["Years"] = _db.Movies.Select(m => m.ReleaseYear).Distinct().OrderByDescending(y => y).ToList();
+        public IActionResult Index(string? lang)
+        {   
+            lang = string.IsNullOrEmpty(lang) ? "en" : lang;
+
 
             var moviesWithDetails = _db.Movies
                 .Select(movie => new
                 {
                     MovieId = movie.Id,
                     MovieReleaseYear = movie.ReleaseYear,
-                    MovieTitle = movie.TitleEn,
-                    MovieDescription = movie.DescriptionEn,
-                    MovieTrailerLink =  movie.TrailerLinkEn,
+                    MovieTitle = lang == "ru" ? movie.TitleRu : movie.TitleEn,
+                    MovieDescription = lang == "ru" ? movie.DescriptionRu : movie.DescriptionEn,
+                    MovieTrailerLink =  lang == "ru" ? movie.TrailerLinkRu : movie.TrailerLinkEn,
                     Genres = movie.MovieGenres.Select(mg => new
                     {
                         GenreId = mg.Genre.Id,
-                        Name = mg.Genre.NameEn,
+                        Name = lang == "ru" ? mg.Genre.NameRu : mg.Genre.NameEn,
                     }).ToList(),
                     Countries = movie.MovieCountries.Select(mc => new
                     {
                         CountryID = mc.Country.Id,
-                        Name = mc.Country.NameEn,
+                        Name = lang == "ru" ? mc.Country.NameRu : mc.Country.NameEn,
                     }).ToList(),
                     Images = movie.MovieImages.Where(mi => mi.IsPoster).Select(mi => new
                     {
@@ -73,8 +73,10 @@ namespace MvcApp.Areas.Main.Controllers
             return View(groupedMovies);
         }
 
-        public IActionResult MovieList(int? releaseYear, string? genre, string? country, string? search)
+        public IActionResult MovieList(int? releaseYear, int? genreId, int? countryId, string? search, string? lang)
         {
+            lang = string.IsNullOrEmpty(lang) ? "en" : lang;
+
             IQueryable<Movie> movieListQuery = _db.Movies
                 .Include(m => m.MovieGenres)
                     .ThenInclude(mg => mg.Genre)
@@ -87,19 +89,19 @@ namespace MvcApp.Areas.Main.Controllers
                 movieListQuery = movieListQuery.Where(m => m.ReleaseYear == releaseYear.Value);
             }
 
-            if (!string.IsNullOrEmpty(genre))
+            if (genreId.HasValue)
             {
-                movieListQuery = movieListQuery.Where(m => m.MovieGenres.Any(mg => mg.Genre.NameEn == genre));
+                movieListQuery = movieListQuery.Where(m => m.MovieGenres.Any(mg => mg.Genre.Id == genreId));
             }
 
-            if (!string.IsNullOrEmpty(country))
+            if (countryId.HasValue)
             {
-                movieListQuery = movieListQuery.Where(m => m.MovieCountries.Any(mc => mc.Country.NameEn == country));
+                movieListQuery = movieListQuery.Where(m => m.MovieCountries.Any(mc => mc.Country.Id == countryId));
             }
 
             if (!string.IsNullOrEmpty(search))
             {
-                movieListQuery = movieListQuery.Where(m => m.TitleEn.Contains(search));
+                movieListQuery = movieListQuery.Where(m => lang == "ru" ? m.TitleRu.Contains(search) : m.TitleEn.Contains(search));
             }
 
             var movieList = movieListQuery.ToList();
@@ -114,16 +116,32 @@ namespace MvcApp.Areas.Main.Controllers
                 Movies = movieList.Select(movie => new MovieViewModel
                 {
                     Id = movie.Id,
-                    Title = movie.TitleEn,
+                    Title = lang == "ru" ? movie.TitleRu : movie.TitleEn,
                     Poster = Convert.ToBase64String(movie.MovieImages.FirstOrDefault(mi => mi.IsPoster)?.Image),
-                    Description = movie.DescriptionEn,
+                    Description = lang == "ru" ? movie.DescriptionRu : movie.DescriptionEn,
                     ReleaseYear = movie.ReleaseYear,
-                    Genres = movie.MovieGenres.Select(mg => mg.Genre).ToList(),
-                    Countries = movie.MovieCountries.Select(mc => mc.Country).ToList(),
+                    Genres = movie.MovieGenres.Select(mg => new GenreMovieListViewModel
+                    {
+                    Id = mg.Genre.Id,
+                    Name = lang == "ru" ? mg.Genre.NameRu : mg.Genre.NameEn
+                    }).ToList(),
+                    Countries = movie.MovieCountries.Select(mc => new CountryMovieListViewModel
+                    {
+                    Id = mc.Country.Id,
+                    Name = lang == "ru" ? mc.Country.NameRu : mc.Country.NameEn
+                    }).ToList(),
                 }).ToList(),
 
-                Genres = _db.Genres.ToList(),
-                Countries = _db.Countries.ToList(),
+                Genres = _db.Genres.Select(g => new GenreMovieListViewModel
+                {
+                    Id = g.Id,
+                    Name = lang == "ru" ? g.NameRu : g.NameEn
+                }).ToList(),
+                Countries = _db.Countries.Select(c => new CountryMovieListViewModel
+                {
+                    Id = c.Id,
+                    Name = lang == "ru" ? c.NameRu : c.NameEn
+                }).ToList(),
                 Years = _db.Movies.Select(m => m.ReleaseYear).Distinct().OrderBy(y => y).ToList()
             };
 
@@ -131,8 +149,11 @@ namespace MvcApp.Areas.Main.Controllers
         }
 
 
-        public IActionResult MovieDetails(int? id)
+        public IActionResult MovieDetails(int? id, string lang = "en")
         {
+
+            lang = string.IsNullOrEmpty(lang) ? "en" : lang;
+
             var movie = _db.Movies
                 .Include(m => m.MovieGenres)
                 .ThenInclude(mg => mg.Genre)
@@ -150,27 +171,42 @@ namespace MvcApp.Areas.Main.Controllers
                 return NotFound();
             }
 
-
             var movieDetails = new MovieDetailsViewModel
             {
-                Title = movie.TitleEn,
-                Description = movie.DescriptionEn,
-                TrailerLink = movie.TrailerLinkEn,
+                Title = lang == "ru" ? movie.TitleRu : movie.TitleEn,
+                Description = lang == "ru" ? movie.DescriptionRu : movie.DescriptionEn,
+                TrailerLink = lang == "ru" ? movie.TrailerLinkRu : movie.TrailerLinkEn,
                 Poster = movie.MovieImages.FirstOrDefault(mi => mi.IsPoster) != null 
-                ? Convert.ToBase64String(movie.MovieImages.FirstOrDefault(mi => mi.IsPoster).Image) 
-                : null,
-                Genres = movie.MovieGenres.Select(mg => mg.Genre.NameEn).ToList(),
-                Countries = movie.MovieCountries.Select(mc => mc.Country.NameEn).ToList(),
+                    ? Convert.ToBase64String(movie.MovieImages.FirstOrDefault(mi => mi.IsPoster).Image) 
+                    : null,
+                Genres = movie.MovieGenres.Select(mg => new GenreViewModel
+                {
+                    Id = mg.Genre.Id,
+                    Name = lang == "ru" ? mg.Genre.NameRu : mg.Genre.NameEn
+                }).ToList(),
+                Countries = movie.MovieCountries.Select(mc => new CountryViewModel
+                {
+                    Id = mc.Country.Id,
+                    Name = lang == "ru" ? mc.Country.NameRu : mc.Country.NameEn
+                }).ToList(),
                 Participants = movie.MovieParticipants
-                    .GroupBy(mp => mp.MovieParticipantCategory.NameEn)
+                    .GroupBy(mp => lang == "ru" ? mp.MovieParticipantCategory.NameRu : mp.MovieParticipantCategory.NameEn)
                     .ToDictionary(
                         grp => grp.Key,
-                        grp => grp.Select(mp => mp.Person).ToList()
+                        grp => grp.Select(mp => new PersonViewModel
+                        {
+                            Id = mp.Person.Id,
+                            BirthDate = mp.Person.BirthDate,
+                            FullName = lang == "ru" ? mp.Person.FullNameRu : mp.Person.FullNameEn,
+                            ShortBio = lang == "ru" ? mp.Person.ShortBioRu : mp.Person.ShortBioEn,
+                        }).ToList()
                     ),
-                Images = movie.MovieImages.Where(mi => !mi.IsPoster).ToDictionary(mi => mi.Id, mi => Convert.ToBase64String(mi.Image))
+                Images = movie.MovieImages.Where(mi => !mi.IsPoster).Select(mi => new ImageViewModel
+                {
+                    Id = mi.Id,
+                    Image = Convert.ToBase64String(mi.Image)
+                }).ToList()
             };
-
-
             return View(movieDetails);
         }
     }
