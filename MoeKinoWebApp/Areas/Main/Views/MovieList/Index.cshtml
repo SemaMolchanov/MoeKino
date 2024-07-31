@@ -1,5 +1,5 @@
 @using MoeKinoWebApp.Models
-@model Dictionary<int, MovieListViewModel>
+@model Dictionary<int, MovieCarouselViewModel>
 
 @{
     var genres = ViewData["Genres"] as List<Genre>;
@@ -13,45 +13,10 @@
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<div class="container mt-4">
-    <div class="row">
-        <!-- Release Year Select -->
-        <div class="col-md-4">
-            <label for="yearSelect">Release Year</label>
-            <select id="yearSelect" class="form-control">
-                <option value="">Select Year</option>
-                @foreach (var year in years)
-                {
-                    <option value="@year">@year</option>
-                }
-            </select>
-        </div>
 
-        <!-- Genre Select -->
-        <div class="col-md-4">
-            <label for="genreSelect">Genre</label>
-            <select id="genreSelect" class="form-control">
-                <option value="">Select Genre</option>
-                @foreach (var genre in genres)
-                {
-                    <option value="@genre.Id">@genre.NameEn</option>
-                }
-            </select>
-        </div>
-
-        <!-- Country Select -->
-        <div class="col-md-4">
-            <label for="countrySelect">Country</label>
-            <select id="countrySelect" class="form-control">
-                <option value="">Select Country</option>
-                @foreach (var country in countries)
-                {
-                    <option value="@country.Id">@country.NameEn</option>
-                }
-            </select>
-        </div>
-    </div>
-</div>
+<a asp-controller="MovieList" asp-action="MovieList" class="btn btn-primary" style="width:250px">
+    Show Movies as List
+</a>
 
 
 <div class="container mt-4">

@@ -54,12 +54,12 @@ namespace MvcApp.Areas.Main.Controllers
                 .Distinct()
                 .ToDictionary(
                 genre => genre.GenreId,
-                genre => new MovieListViewModel
+                genre => new MovieCarouselViewModel
                 {
                     GenreName = genre.Name,
                     Movies = moviesWithDetails
                         .Where(movie => movie.Genres.Any(mg => mg.GenreId == genre.GenreId))
-                        .Select(movie => new MovieDetail
+                        .Select(movie => new MovieThumbnail
                         {
                             Id = movie.MovieId,
                             Title = movie.MovieTitle,
@@ -72,6 +72,64 @@ namespace MvcApp.Areas.Main.Controllers
 
             return View(groupedMovies);
         }
+
+        public IActionResult MovieList(int? releaseYear, string? genre, string? country, string? search)
+        {
+            IQueryable<Movie> movieListQuery = _db.Movies
+                .Include(m => m.MovieGenres)
+                    .ThenInclude(mg => mg.Genre)
+                .Include(m => m.MovieCountries)
+                    .ThenInclude(mc => mc.Country)
+                .Include(m => m.MovieImages);
+
+            if (releaseYear.HasValue)
+            {
+                movieListQuery = movieListQuery.Where(m => m.ReleaseYear == releaseYear.Value);
+            }
+
+            if (!string.IsNullOrEmpty(genre))
+            {
+                movieListQuery = movieListQuery.Where(m => m.MovieGenres.Any(mg => mg.Genre.NameEn == genre));
+            }
+
+            if (!string.IsNullOrEmpty(country))
+            {
+                movieListQuery = movieListQuery.Where(m => m.MovieCountries.Any(mc => mc.Country.NameEn == country));
+            }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                movieListQuery = movieListQuery.Where(m => m.TitleEn.Contains(search));
+            }
+
+            var movieList = movieListQuery.ToList();
+
+            if (movieList == null || !movieList.Any())
+            {
+                return NotFound();
+            }
+
+            var viewModel = new MovieListViewModel
+            {
+                Movies = movieList.Select(movie => new MovieViewModel
+                {
+                    Id = movie.Id,
+                    Title = movie.TitleEn,
+                    Poster = Convert.ToBase64String(movie.MovieImages.FirstOrDefault(mi => mi.IsPoster)?.Image),
+                    Description = movie.DescriptionEn,
+                    ReleaseYear = movie.ReleaseYear,
+                    Genres = movie.MovieGenres.Select(mg => mg.Genre).ToList(),
+                    Countries = movie.MovieCountries.Select(mc => mc.Country).ToList(),
+                }).ToList(),
+
+                Genres = _db.Genres.ToList(),
+                Countries = _db.Countries.ToList(),
+                Years = _db.Movies.Select(m => m.ReleaseYear).Distinct().OrderBy(y => y).ToList()
+            };
+
+            return View(viewModel);
+        }
+
 
         public IActionResult MovieDetails(int? id)
         {

@@ -10,8 +10,11 @@
 
 <div class="container mt-4">
     <a asp-controller="MovieList" asp-action="Index" class="btn btn-secondary" style="width:200px">
-            Back to Movie List
-        </a>
+        Back to Movie Carousel
+    </a>
+    <a asp-controller="MovieList" asp-action="MovieList" class="btn btn-secondary" style="width:200px">
+        Back to Movie List
+    </a>
     <h1>@Model.Title</h1>
     @if (!string.IsNullOrEmpty(Model.Description))
     {
