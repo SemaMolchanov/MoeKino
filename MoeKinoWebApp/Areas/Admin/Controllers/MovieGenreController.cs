@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoeKinoWebApp.Data;
 using MoeKinoWebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MvcApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "AdminPolicy")]
     public class MovieGenreController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -33,33 +35,6 @@ namespace MvcApp.Areas.Admin.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
-
-        /*public IActionResult Edit(int movieID, int genreID)
-        {
-            if (movieID == 0 || genreID == 0)
-            {
-                return NotFound();
-            }
-
-            var movieGenreFromDb = _db.MovieGenres
-                .FirstOrDefault(mg => mg.MovieID == movieID && mg.GenreID == genreID);
-
-            if (movieGenreFromDb == null)
-            {
-                return NotFound();
-            }
-
-            return View(movieGenreFromDb);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditPOST(MovieGenre obj)
-        {   
-            _db.MovieGenres.Update(obj);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
-        }*/
 
         public IActionResult Delete(int movieID, int genreID)
         {

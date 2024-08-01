@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -79,6 +81,27 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" data-i18n="main" asp-area="Main" asp-controller="MovieList" asp-action="Index">Main</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" data-i18n="favourites" asp-area="Main" asp-controller="MovieList" asp-action="FavouriteMovieList">Favourites</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" data-i18n="welcome">Welcome, @User.FindFirstValue(ClaimTypes.Name)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" data-i18n="logout" asp-area="Auth" asp-controller="Auth" asp-action="Logout">Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" data-i18n="register" asp-area="Auth" asp-controller="Auth" asp-action="Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" data-i18n="login" asp-area="Auth" asp-controller="Auth" asp-action="Login">Login</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -106,6 +129,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

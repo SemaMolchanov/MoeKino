@@ -1,0 +1,9 @@
+@using MoeKinoWebApp.Models
+@model RegisterViewModel
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<form asp-action="LogoutPOST" method="post">
+    <h2>Are you sure you want to logout</h2>
+    <button data-i18n="logout" type="submit">Logout</button>
+</form>

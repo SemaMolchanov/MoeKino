@@ -20,5 +20,12 @@
     "search": "Search by title: ",
     "view-details": "View details",
     "search-button": "Search",
-    "watch-trailer": "Watch trailer"
+    "watch-trailer": "Watch trailer",
+    "favourites": "Favourites",
+    "welcome": "Welcome, ",
+    "register": "Register",
+    "login": "Login",
+    "logout": "Logout",
+    "add-to-favourites": "Add to favourites",
+    "delete-from-favourites": "Delete from favourites"
 }

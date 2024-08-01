@@ -18,6 +18,8 @@ public class ApplicationDbContext: DbContext{
     public DbSet<MovieParticipant> MovieParticipants { get; set; }
     public DbSet<Country> Countries { get; set; }
     public DbSet<MovieCountry> MovieCountries { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<UserFavouriteMovie> UserFavouriteMovies  { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -145,6 +147,46 @@ public class ApplicationDbContext: DbContext{
             entity.HasOne(e => e.Country)
                 .WithMany(c => c.MovieCountries)
                 .HasForeignKey(e => e.CountryID)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("Users");
+
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Email)
+                .IsRequired()
+                .HasMaxLength(256);
+
+            entity.Property(e => e.PasswordHash)
+                .IsRequired()
+                .HasColumnType("nvarchar(MAX)");
+
+            entity.Property(e => e.IsAdmin)
+                .HasDefaultValue(false);
+
+            entity.HasIndex(u => u.Email)
+                .IsUnique();
+        });
+
+        modelBuilder.Entity<UserFavouriteMovie>(entity =>
+        {
+            entity.ToTable("UserFavouriteMovies");
+            entity.HasKey(e => new { e.UserID, e.MovieID });
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.UserFavouriteMovies)
+                .HasForeignKey(e => e.UserID)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Movie)
+                .WithMany(m => m.UserFavouriteMovies)
+                .HasForeignKey(e => e.MovieID)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
         });

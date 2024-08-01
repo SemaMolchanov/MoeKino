@@ -20,5 +20,12 @@
     "search-by-title": "Искать по названию: ",
     "view-details": "Подробнее",
     "search-button": "Найти",
-    "watch-trailer": "Смотреть трейлер"
+    "watch-trailer": "Смотреть трейлер",
+    "favourites": "Избранное",
+    "welcome": "Добро пожаловать, ",
+    "register": "Зарегистрироваться",
+    "login": "Войти",
+    "logout": "Выйти",
+    "add-to-favourites": "Добавить в избраннное",
+    "delete-from-favourites": "Удалить из избранного"
 }

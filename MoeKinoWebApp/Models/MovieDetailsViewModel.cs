@@ -2,6 +2,7 @@ using MoeKinoWebApp.Models;
 
 public class MovieDetailsViewModel
 {
+    public int Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public string Poster { get; set; }
@@ -10,6 +11,7 @@ public class MovieDetailsViewModel
     public List<CountryViewModel> Countries { get; set; }
     public Dictionary<string, List<PersonViewModel>> Participants { get; set; } // Ключ - категория, значение - список участников
     public List<ImageViewModel> Images { get; set; }
+    public bool IsFavourite { get; set; }
 }
 
 public class GenreViewModel

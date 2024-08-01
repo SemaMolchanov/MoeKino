@@ -1,14 +1,38 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using MoeKinoWebApp.Data;
+using Microsoft.AspNetCore.Identity;
+using MoeKinoWebApp.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
 ));
+
+builder.Services.AddSingleton<PasswordHasher<User>>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Auth/Login"; 
+        options.LogoutPath = "/Auth/Logout"; 
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60); 
+        options.SlidingExpiration = true; 
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy =>
+        policy.RequireRole("Admin"));
+});
+
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -26,14 +50,20 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapRazorPages();
 
-
 app.MapAreaControllerRoute(
     name: "admin_area",
     areaName: "Admin",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapAreaControllerRoute(
+    name: "auth_area",
+    areaName: "Auth",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoeKinoWebApp.Data;
 
@@ -11,9 +12,11 @@ using MoeKinoWebApp.Data;
 namespace MoeKinoWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240801105503_CreateUsersTable")]
+    partial class CreateUsersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,25 +267,7 @@ namespace MoeKinoWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
                     b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("MoeKinoWebApp.Models.UserFavouriteMovie", b =>
-                {
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MovieID")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserID", "MovieID");
-
-                    b.HasIndex("MovieID");
-
-                    b.ToTable("UserFavouriteMovies", (string)null);
                 });
 
             modelBuilder.Entity("MoeKinoWebApp.Models.MovieCountry", b =>
@@ -361,25 +346,6 @@ namespace MoeKinoWebApp.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("MoeKinoWebApp.Models.UserFavouriteMovie", b =>
-                {
-                    b.HasOne("MoeKinoWebApp.Models.Movie", "Movie")
-                        .WithMany("UserFavouriteMovies")
-                        .HasForeignKey("MovieID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MoeKinoWebApp.Models.User", "User")
-                        .WithMany("UserFavouriteMovies")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("MoeKinoWebApp.Models.Country", b =>
                 {
                     b.Navigation("MovieCountries");
@@ -399,8 +365,6 @@ namespace MoeKinoWebApp.Migrations
                     b.Navigation("MovieImages");
 
                     b.Navigation("MovieParticipants");
-
-                    b.Navigation("UserFavouriteMovies");
                 });
 
             modelBuilder.Entity("MoeKinoWebApp.Models.MovieParticipantCategory", b =>
@@ -411,11 +375,6 @@ namespace MoeKinoWebApp.Migrations
             modelBuilder.Entity("MoeKinoWebApp.Models.Person", b =>
                 {
                     b.Navigation("MovieParticipants");
-                });
-
-            modelBuilder.Entity("MoeKinoWebApp.Models.User", b =>
-                {
-                    b.Navigation("UserFavouriteMovies");
                 });
 #pragma warning restore 612, 618
         }

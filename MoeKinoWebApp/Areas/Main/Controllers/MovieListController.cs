@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using System.Security.Claims;
 using Microsoft.Identity.Client;
 using MoeKinoWebApp.Data;
 using MoeKinoWebApp.Models;
+using Microsoft.AspNetCore.Authorization;
+
+
 
 namespace MvcApp.Areas.Main.Controllers
 {
@@ -73,7 +76,7 @@ namespace MvcApp.Areas.Main.Controllers
             return View(groupedMovies);
         }
 
-        public IActionResult MovieList(int? releaseYear, int? genreId, int? countryId, string? search, string? lang)
+        public IActionResult MovieList(int? releaseYear, string? genre, string? country, string? search, string? lang)
         {
             lang = string.IsNullOrEmpty(lang) ? "en" : lang;
 
@@ -89,14 +92,14 @@ namespace MvcApp.Areas.Main.Controllers
                 movieListQuery = movieListQuery.Where(m => m.ReleaseYear == releaseYear.Value);
             }
 
-            if (genreId.HasValue)
+            if (!string.IsNullOrEmpty(genre))
             {
-                movieListQuery = movieListQuery.Where(m => m.MovieGenres.Any(mg => mg.Genre.Id == genreId));
+                movieListQuery = movieListQuery.Where(m => m.MovieGenres.Any(mg => lang == "ru" ? mg.Genre.NameRu == genre : mg.Genre.NameEn == genre));
             }
 
-            if (countryId.HasValue)
+            if  (!string.IsNullOrEmpty(country))
             {
-                movieListQuery = movieListQuery.Where(m => m.MovieCountries.Any(mc => mc.Country.Id == countryId));
+                movieListQuery = movieListQuery.Where(m => m.MovieCountries.Any(mc => lang == "ru" ? mc.Country.NameRu == country : mc.Country.NameEn == country));
             }
 
             if (!string.IsNullOrEmpty(search))
@@ -148,7 +151,6 @@ namespace MvcApp.Areas.Main.Controllers
             return View(viewModel);
         }
 
-
         public IActionResult MovieDetails(int? id, string lang = "en")
         {
 
@@ -171,8 +173,12 @@ namespace MvcApp.Areas.Main.Controllers
                 return NotFound();
             }
 
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var isFavourite = _db.UserFavouriteMovies.Any(ufm => ufm.UserID == userId && ufm.MovieID == id);
+
             var movieDetails = new MovieDetailsViewModel
             {
+                Id = movie.Id,
                 Title = lang == "ru" ? movie.TitleRu : movie.TitleEn,
                 Description = lang == "ru" ? movie.DescriptionRu : movie.DescriptionEn,
                 TrailerLink = lang == "ru" ? movie.TrailerLinkRu : movie.TrailerLinkEn,
@@ -205,9 +211,112 @@ namespace MvcApp.Areas.Main.Controllers
                 {
                     Id = mi.Id,
                     Image = Convert.ToBase64String(mi.Image)
-                }).ToList()
+                }).ToList(),
+                IsFavourite = isFavourite
             };
             return View(movieDetails);
+        }
+
+        [HttpPost]
+            public async Task<IActionResult> AddToFavourites(int id)
+            {
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                var userFavourite = await _db.UserFavouriteMovies
+                    .SingleOrDefaultAsync(ufm => ufm.UserID == userId && ufm.MovieID == id);
+
+                if (userFavourite == null)
+                {
+                    var newFavourite = new UserFavouriteMovie
+                    {
+                        UserID = userId,
+                        MovieID = id
+                    };
+
+                    _db.UserFavouriteMovies.Add(newFavourite);
+                    await _db.SaveChangesAsync();
+                }
+
+                return RedirectToAction("FavouriteMovieList");
+            }
+
+            [HttpPost]
+            public async Task<IActionResult> DeleteFromFavourites(int id)
+            {
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                var userFavourite = await _db.UserFavouriteMovies
+                    .SingleOrDefaultAsync(ufm => ufm.UserID == userId && ufm.MovieID == id);
+
+                if (userFavourite != null)
+                {
+                    _db.UserFavouriteMovies.Remove(userFavourite);
+                    await _db.SaveChangesAsync();
+                }
+                
+                return RedirectToAction("FavouriteMovieList");
+            }
+
+
+        [HttpGet]
+        public IActionResult FavouriteMovieList(string? lang)
+            {
+
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                lang = string.IsNullOrEmpty(lang) ? "en" : lang;
+
+                IQueryable<Movie> movieListQuery = _db.Movies
+                    .Include(m => m.MovieGenres)
+                        .ThenInclude(mg => mg.Genre)
+                    .Include(m => m.MovieCountries)
+                        .ThenInclude(mc => mc.Country)
+                    .Include(m => m.MovieImages)
+                    .Where(m => m.UserFavouriteMovies.Any(ufm => ufm.User.Id == userId));
+
+                var movieList = movieListQuery.ToList();
+
+                if (movieList == null || !movieList.Any())
+                {
+                    return NotFound();
+                }
+
+                var viewModel = new MovieListViewModel
+                {
+                    Movies = movieList.Select(movie => new MovieViewModel
+                    {
+                        Id = movie.Id,
+                        Title = lang == "ru" ? movie.TitleRu : movie.TitleEn,
+                        Poster = Convert.ToBase64String(movie.MovieImages.FirstOrDefault(mi => mi.IsPoster)?.Image),
+                        Description = lang == "ru" ? movie.DescriptionRu : movie.DescriptionEn,
+                        ReleaseYear = movie.ReleaseYear,
+                        Genres = movie.MovieGenres.Select(mg => new GenreMovieListViewModel
+                        {
+                        Id = mg.Genre.Id,
+                        Name = lang == "ru" ? mg.Genre.NameRu : mg.Genre.NameEn
+                        }).ToList(),
+                        Countries = movie.MovieCountries.Select(mc => new CountryMovieListViewModel
+                        {
+                        Id = mc.Country.Id,
+                        Name = lang == "ru" ? mc.Country.NameRu : mc.Country.NameEn
+                        }).ToList(),
+                    }).ToList(),
+
+                    Genres = _db.Genres.Select(g => new GenreMovieListViewModel
+                    {
+                        Id = g.Id,
+                        Name = lang == "ru" ? g.NameRu : g.NameEn
+                    }).ToList(),
+                    Countries = _db.Countries.Select(c => new CountryMovieListViewModel
+                    {
+                        Id = c.Id,
+                        Name = lang == "ru" ? c.NameRu : c.NameEn
+                    }).ToList(),
+                    Years = _db.Movies.Select(m => m.ReleaseYear).Distinct().OrderBy(y => y).ToList()
+                };
+
+                return View(viewModel);
+            
         }
     }
 }

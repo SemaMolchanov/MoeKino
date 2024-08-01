@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using MoeKinoWebApp.Data;
 using MoeKinoWebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MvcApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "AdminPolicy")]
     public class CountryController : Controller
     {
         private readonly ApplicationDbContext _db;

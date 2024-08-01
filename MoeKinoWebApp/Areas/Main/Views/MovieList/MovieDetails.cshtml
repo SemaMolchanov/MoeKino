@@ -15,6 +15,26 @@
     <a data-i18n="back-to-movie-list" asp-controller="MovieList" asp-action="MovieList" class="btn btn-secondary" style="width:200px">
         Back to Movie List
     </a>
+    @if (!Model.IsFavourite)
+    {
+        <form asp-controller="MovieList" asp-action="AddToFavourites" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button data-i18n="add-to-favourites" type="submit" class="btn btn-primary" style="width:200px">
+                Add to favourites
+            </button>
+        </form>
+    }
+    else
+    {
+        <form asp-controller="MovieList" asp-action="DeleteFromFavourites" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button data-i18n="delete-from-favourites" type="submit" class="btn btn-primary" style="width:200px">
+                Delete from favourites
+            </button>
+        </form>
+    }
+
+
     <h1>@Model.Title</h1>
     @if (!string.IsNullOrEmpty(Model.Description))
     {
