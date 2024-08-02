@@ -1,18 +1,27 @@
 @using MoeKinoWebApp.Models
 @model RegisterViewModel
 
+@{
+    Layout = "_LayoutAuth";
+}
+
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<form asp-action="RegisterPOST" method="post">
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="border rounded p-4 bg-light shadow-sm" style="max-width: 400px;">
+        <form asp-action="RegisterPOST" method="post">
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <button data-i18n="register" type="submit" class="btn btn-primary w-100">Register</button>
+        </form>
     </div>
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <button data-i18n="register" type="submit">Register</button>
-</form>
+</div>
+

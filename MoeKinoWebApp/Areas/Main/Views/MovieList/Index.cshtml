@@ -9,9 +9,11 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 
-<a data-i18n="movies-as-list" asp-controller="MovieList" asp-action="MovieList" class="btn btn-primary" style="width:250px">
-    Show Movies as List
-</a>
+<div class="d-flex justify-content-center mb-4">
+        <a data-i18n="movies-as-list" asp-controller="MovieList" asp-action="MovieList" class="btn btn-primary" style="width:250px">
+            Show Movies as List
+        </a>
+</div>
 
 
 <div class="container mt-4">
@@ -62,6 +64,39 @@
     </div>
 </div>
 
+<style>
+        .carousel-inner {
+            display: flex;
+            overflow: hidden;
+        }
+
+        .carousel-content {
+            display: flex;
+            flex-wrap: nowrap;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item-content {
+            flex: 0 0 auto;
+            width: 200px; 
+            margin-right: 15px; 
+            text-align: center; 
+        }
+
+        .carousel-item-content img {
+            width: 100%; 
+            height: 360px; 
+        }
+
+        .movie-title {
+            margin-top: 10px; 
+        }
+
+        .carousel-control-prev, .carousel-control-next {
+            width: 5%; 
+            color: black; 
+        }
+    </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

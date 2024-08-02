@@ -10,53 +10,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MoeKinoWebApp.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <style>
-        .carousel-inner {
-            display: flex;
-            overflow: hidden;
-        }
 
-        .carousel-content {
-            display: flex;
-            flex-wrap: nowrap;
-            transition: transform 0.5s ease;
-        }
-
-        .carousel-item-content {
-            flex: 0 0 auto;
-            width: 200px; 
-            margin-right: 15px; 
-            text-align: center; 
-        }
-
-        .carousel-item-content img {
-            width: 100%; 
-            height: auto; 
-        }
-
-        .movie-title {
-            margin-top: 10px; 
-        }
-
-        .carousel-control-prev, .carousel-control-next {
-            width: 5%; 
-            color: black; 
-        }
-
-        .search-input-wrapper {
-            position: relative;
-        }
-        .search-input-wrapper input {
-            padding-left: 2.5rem; 
-        }
-        .search-input-wrapper .bi-search {
-            position: absolute;
-            top: 50%;
-            left: 0.5rem;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -107,12 +61,13 @@
             </div>
         </nav>
     </header>
-    <div class="container mt-4 text-end">
-        <select id="languageSelect">
-            <option value="en">English</option>
-            <option value="ru">Русский</option>
-        </select>
-    </div>
+<div class="container mt-4 text-end">
+    <select id="languageSelect">
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+    </select>
+</div>
+
 
     <div class="container">
         <main role="main" class="pb-3">

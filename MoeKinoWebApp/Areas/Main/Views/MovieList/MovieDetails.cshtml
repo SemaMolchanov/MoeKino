@@ -9,70 +9,80 @@
 @model MovieDetailsViewModel
 
 <div class="container mt-4">
-    <a data-i18n="back-to-main" asp-controller="MovieList" asp-action="Index" class="btn btn-secondary" style="width:200px">
-        Back to Main
-    </a>
-    <a data-i18n="back-to-movie-list" asp-controller="MovieList" asp-action="MovieList" class="btn btn-secondary" style="width:200px">
-        Back to Movie List
-    </a>
-    @if (!Model.IsFavourite)
-    {
-        <form asp-controller="MovieList" asp-action="AddToFavourites" method="post">
-            <input type="hidden" name="id" value="@Model.Id" />
-            <button data-i18n="add-to-favourites" type="submit" class="btn btn-primary" style="width:200px">
-                Add to favourites
-            </button>
-        </form>
-    }
-    else
-    {
-        <form asp-controller="MovieList" asp-action="DeleteFromFavourites" method="post">
-            <input type="hidden" name="id" value="@Model.Id" />
-            <button data-i18n="delete-from-favourites" type="submit" class="btn btn-primary" style="width:200px">
-                Delete from favourites
-            </button>
-        </form>
-    }
+    <div class="d-flex justify-content-between">
+        <!-- Кнопки в левом верхнем углу -->
+        <div>
+            <a data-i18n="back-to-main" asp-controller="MovieList" asp-action="Index" class="btn btn-secondary" style="width:220px">
+                Back to Main
+            </a>
+            <a data-i18n="back-to-movie-list" asp-controller="MovieList" asp-action="MovieList" class="btn btn-secondary" style="width:220px">
+                Back to Movie List
+            </a>
+        </div>
+        <!-- Кнопка в правом верхнем углу -->
+        @if (!Model.IsFavourite)
+        {
+            <form asp-controller="MovieList" asp-action="AddToFavourites" method="post" class="d-flex align-items-start">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button data-i18n="add-to-favourites" type="submit" class="btn btn-primary" style="width:200px">
+                    Add to favourites
+                </button>
+            </form>
+        }
+        else
+        {
+            <form asp-controller="MovieList" asp-action="DeleteFromFavourites" method="post" class="d-flex align-items-start">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button data-i18n="delete-from-favourites" type="submit" class="btn btn-danger" style="width:200px">
+                    Delete from favourites
+                </button>
+            </form>
+        }
+    </div>
+</div>
 
 
-    <h1>@Model.Title</h1>
-    @if (!string.IsNullOrEmpty(Model.Description))
-    {
-        <p>@Model.Description</p>
-    }
-    @if (!string.IsNullOrEmpty(Model.Poster))
-    {
-        <img src="data:image/jpeg;base64,@Model.Poster" class="img-fluid" alt="Poster">
-    }
-    @if (!string.IsNullOrEmpty(Model.TrailerLink))
-    {
-        <a href="@Model.TrailerLink" class="btn btn-primary trailer-button" target="_blank" data-i18n="watch-trailer">Watch Trailer</a>
-    }
-    <h3 data-i18n="genres">Genres:</h3>
-    <ul>
-        @foreach (var genre in Model.Genres)
-        {
-            <li>@genre.Name</li>
-        }
-    </ul>
-    <h3 data-i18n="countries">Countries:</h3>
-    <ul>
-        @foreach (var country in Model.Countries)
-        {
-            <li>@country.Name</li>
-        }
-    </ul>
-    <h3 data-i18n="participants">Participants:</h3>
-    @foreach (var category in Model.Participants)
-    {
-        <h4>@category.Key:</h4>
-        <ul>
-            @foreach (var person in category.Value)
+<div class="container mt-4">
+    <div class="row">
+        <!-- Левая колонка для постера -->
+        <div class="col-md-4">
+            @if (!string.IsNullOrEmpty(Model.Poster))
             {
-                <li>@person.FullName @person.BirthDate @person.ShortBio</li>
+                <img src="data:image/jpeg;base64,@Model.Poster" class="img-fluid poster-img" alt="Poster">
             }
-        </ul>
-    }
+        </div>
+        <!-- Правая колонка для заголовка, описания и других элементов -->
+        <div class="col-md-8">
+            <h1>@Model.Title</h1>
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <p>@Model.Description</p>
+            }
+            <h3 data-i18n="genres">Genres:</h3>
+            <p>@string.Join(", ", Model.Genres.Select(g => g.Name))</p>
+            <h3 data-i18n="countries">Countries:</h3>
+            <p>@string.Join(", ", Model.Countries.Select(c => c.Name))</p>
+            @if (!string.IsNullOrEmpty(Model.TrailerLink))
+            {
+                <a href="@Model.TrailerLink" class="btn btn-primary trailer-button" target="_blank" data-i18n="watch-trailer">Watch Trailer</a>
+            }
+        </div>
+    </div>
+
+    <h3 data-i18n="participants">Participants:</h3>
+    <ul>
+        @foreach (var category in Model.Participants)
+        {
+            <h4>@category.Key:</h4>
+            <ul>
+                @foreach (var person in category.Value)
+                {
+                    <li>@person.FullName @person.BirthDate @person.ShortBio</li>
+                }
+            </ul>
+        }
+    </ul>
+
     <h3 data-i18n="images">Images:</h3>
     <div class="row">
         @foreach (var image in Model.Images)
@@ -83,3 +93,11 @@
         }
     </div>
 </div>
+
+<style>
+    .poster-img {
+        height: 600px; /* Устанавливаем высоту изображения */
+        object-fit: cover; /* Обрезаем изображение, чтобы оно заполнило контейнер, сохраняя пропорции */
+        margin-bottom: 15px; /* Уменьшаем отступ между картинкой и правой колонкой */
+    }
+</style>
